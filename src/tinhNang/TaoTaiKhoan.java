@@ -13,10 +13,10 @@ import java.util.List;
 
 public class TaoTaiKhoan extends JFrame {
 
-    private JTextField tfTaiKhoan;
-    private JPasswordField pfMatKhau;
-    private JButton btnTaoTaiKhoan;
-    private QuanLyTiemNet quanLyTiemNet;
+    private final JTextField tfTaiKhoan;
+    private final JPasswordField pfMatKhau;
+    private final JButton btnTaoTaiKhoan;
+    private final QuanLyTiemNet quanLyTiemNet;
 
     public TaoTaiKhoan(QuanLyTiemNet quanLyTiemNet) {
         this.quanLyTiemNet = quanLyTiemNet;
@@ -90,28 +90,35 @@ public class TaoTaiKhoan extends JFrame {
         return false;
     }
 
-    private List<NguoiChoi> readFromXml() {
-        // Read the existing accounts from the XML file
-        List<NguoiChoi> nguoiChoiList = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("nguoiChoi.xml"))) {
+    private static List<NguoiChoi> readFromXml() {
+    List<NguoiChoi> nguoiChoiList = new ArrayList<>();
+    File file = new File("nguoiChoi.xml");
+
+    if (file.exists()) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             while (true) {
-                NguoiChoi nguoiChoi = (NguoiChoi) ois.readObject();
-                nguoiChoiList.add(nguoiChoi);
+                try {
+                    NguoiChoi nguoiChoi = (NguoiChoi) ois.readObject();
+                    nguoiChoiList.add(nguoiChoi);
+                } catch (EOFException e) {
+                    // Đã đọc hết file
+                    break;
+                }
             }
-        } catch (EOFException e) {
-            // End of file reached
         } catch (Exception e) {
-            e.printStackTrace();
         }
-        return nguoiChoiList;
+    } else {
+        JOptionPane.showMessageDialog(null, "File XML không tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
+
+    return nguoiChoiList;
+}
 
     private void saveToXml(NguoiChoi nguoiChoi) {
         // Save NguoiChoi to the XML file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("nguoiChoi.xml", true))) {
             oos.writeObject(nguoiChoi);
         } catch (Exception e) {
-            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Lỗi khi lưu tài khoản vào file XML");
         }
     }
@@ -120,7 +127,7 @@ public class TaoTaiKhoan extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new TaoTaiKhoan(null); // The null parameter can be changed if needed
+                new TaoTaiKhoan(null); 
             }
         });
     }

@@ -2,28 +2,23 @@ package giaoDien;
 
 import tinhNang.TaoTaiKhoan;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
+import tinhNang.TimKiem;
 
 public class QuanLyTiemNet extends JFrame {
-   
+
     private final JTable table;
 
     public QuanLyTiemNet() {
         setTitle("Tiệm Net PKA");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Panel chứa 6 chức năng bên trái
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new GridLayout(6, 1, 10, 10));
 
@@ -41,20 +36,19 @@ public class QuanLyTiemNet extends JFrame {
         btnTimKiem.setFont(buttonFont);
         btnThongKe.setFont(buttonFont);
         btnTinhTien.setFont(buttonFont);
-        
+
         btnTaoTaiKhoan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Open the TaoTaiKhoan window when the "Tạo Tài Khoản" button is pressed
                 new TaoTaiKhoan(QuanLyTiemNet.this);
             }
         });
-        
+
+
         btnTinhTien.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // Calculate the fee when the "Tính Tiền" button is pressed
                     calculateFee();
                 } catch (ParseException ex) {
                     Logger.getLogger(QuanLyTiemNet.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,16 +56,24 @@ public class QuanLyTiemNet extends JFrame {
             }
         });
         
-        
+        btnTimKiem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Gọi hàm tìm kiếm với giao diện
+                TimKiem.timKiemVoiGiaoDien();
+            }
+        });
 
+        
+        
+        
+        
         leftPanel.add(btnTaoTaiKhoan);
         leftPanel.add(btnXoaMayTinh);
         leftPanel.add(btnThemMayTinh);
         leftPanel.add(btnTimKiem);
         leftPanel.add(btnThongKe);
         leftPanel.add(btnTinhTien);
-
-        // Panel chứa danh sách 12 máy tính bên phải
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new GridLayout(4, 3, 10, 10));
 
@@ -103,6 +105,8 @@ public class QuanLyTiemNet extends JFrame {
         setVisible(true);
     }
 
+   
+
     public void updateTable(String computerName) {
         TableUI.updateTable(table, computerName);
     }
@@ -116,7 +120,7 @@ public class QuanLyTiemNet extends JFrame {
             @Override
             public void run() {
                 QuanLyTiemNet quanLyTiemNet = new QuanLyTiemNet();
-                quanLyTiemNet.setLogicNetUI(logicNetUI); 
+                quanLyTiemNet.setLogicNetUI(logicNetUI);
                 quanLyTiemNet.setVisible(true);
             }
         });
