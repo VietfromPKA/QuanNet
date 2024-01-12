@@ -63,11 +63,7 @@ public class QuanLyTiemNet extends JFrame {
                 TimKiem.timKiemVoiGiaoDien();
             }
         });
-
-        
-        
-        
-        
+  
         leftPanel.add(btnTaoTaiKhoan);
         leftPanel.add(btnXoaMayTinh);
         leftPanel.add(btnThemMayTinh);
